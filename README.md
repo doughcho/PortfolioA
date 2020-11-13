@@ -1,8 +1,8 @@
 # PortfolioA
-Webapp demo project using Java EE and HTML-CSS-JavaScript. The project is "a customer order processing system with multiple order items" development.
+Webapp demo project using Java EE and HTML-CSS-JavaScript. The project is for "a customer order processing system with multiple order items" development.
 
 Motivation
-- I wanted to build working Webapps(SPA) for my implementation experience. With the project, I also tried to show my ability/expertise about (not only web) programming.
+- I wanted to build working Webapps(SPA) for my implementation experience. With the project, I also tried to show my expertise about (not only web) programming.
 
 Build Status
 - The system is working as is but also is a partial implementation
@@ -13,11 +13,11 @@ Build Status
 
 Code style
 - Microservices architecture (without using MVC framework like Spring)
-- SPA
+- SPA using Servlet and Ajax/jQuery
 
 Tech/framework used
-- Server side: Java EE with JDBC, JSON, cookie
-- Client side: HTML, CSS, JavaScript(+jQuery) with JSON, cookie
+- Server side: Java EE with Servlet, JDBC, JSON, cookie
+- Client side: HTML, CSS, JavaScript(+Ajax/jQuery) with JSON, cookie
 - Development: Eclipse IDE for Enterprise Java Developers (version: 2020-09 (4.17.0))
 - Project type: Dynamic Web Project
 - VCS: Git with GitHub
