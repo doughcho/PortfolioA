@@ -9,7 +9,7 @@ Build Status
 - "Recent Orders" of a customer part is not developed (will be added sooner or later)
 - Shipping management including shipment tracking interface is not developed
 - Collection management including back office system interface is not developed
-- Code management system (users, customers, items, employees) is not developed (data is built through MySQL wWrkbench)
+- Code management system (users, customers, items, employees) is not developed (data was built through MySQL Workbench)
 
 Code style
 - Microservices architecture (without using MVC framework like Spring)
