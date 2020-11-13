@@ -2,7 +2,7 @@
 Webapp demo project using Java EE and HTML-CSS-JavaScript
 The project is "a customer order processing system with multiple order items" development.
 
-Motivation: 
+Motivation
 - I wanted to build working Webapps(SPA) for my implementation experience. With the project, I also tried to show my ability/expertise about (not only web) programming.
 
 Build Status
@@ -20,15 +20,15 @@ Tech/framework used
 - Server side: Java EE with JDBC, JSON, cookie
 - Client side: HTML, CSS, JavaScript(+jQuery) with JSON, cookie
 - Development: Eclipse IDE for Enterprise Java Developers (version: 2020-09 (4.17.0))
-- Pjt. style : Dynamic Web Project
-- VCS        : Git with GitHub
+- Project type: Dynamic Web Project
+- VCS: Git with GitHub
 
 Running Environment
-- WS/WAS : Apache Tomcat v9.0 Server
-- DBMS   : MySQL Server (version: 8.0.21)
-- JDBC   : MySQL Connector-Java 8.0.21
-- jQuery : jQuery-3.5.1 (from code.jquery.com)
-- JSON   : gson-2.8.6   (from search.maven.org)
+- WS/WAS: Apache Tomcat v9.0 Server
+- DBMS: MySQL Server (version: 8.0.21)
+- JDBC: MySQL Connector-Java 8.0.21
+- jQuery: jQuery-3.5.1 (from code.jquery.com)
+- JSON: gson-2.8.6   (from search.maven.org)
 
 
 
