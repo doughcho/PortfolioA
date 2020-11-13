@@ -6,12 +6,12 @@ Motivation
 
 Build Status
 - The system is working as is but also is a partial implementation
-- "Recent Orders" of a customer part is not developed (will be added sooner or later)
-- Shipping management including shipment tracking interface is not developed
-- Collection management including back office system interface is not developed
-- Code management system (users, customers, items, employees) is not developed (data was built through MySQL Workbench)
+- "Recent Orders" of a customer part not developed yet (will be added sooner or later)
+- Shipping management including shipment tracking interface not developed
+- Collection management including back office system interface not developed
+- Code management system (users, customers, items, employees) not developed (data was built through MySQL Workbench)
 
-Code style
+Code Style
 - Microservices architecture (without using MVC framework like Spring)
 - SPA using Servlet and Ajax/jQuery
 
@@ -27,8 +27,7 @@ Running Environment
 - DBMS: MySQL Server (version: 8.0.21)
 - JDBC: MySQL Connector-Java 8.0.21
 - jQuery: jQuery-3.5.1 (from code.jquery.com)
-- JSON: gson-2.8.6   (from search.maven.org)
-
+- JSON: gson-2.8.6 (from search.maven.org)
 
 
 
