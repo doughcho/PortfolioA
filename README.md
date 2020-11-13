@@ -2,25 +2,25 @@
 Webapp demo project using Java EE and HTML-CSS-JavaScript
 The project is "a customer order processing system with multiple order items" development.
 
-Motivation
-I wanted to build working Webapps(SPA) for my implementation experience.
-With the project, I also tried to show my ability/expertise about (not only web) programming.
+Motivation: 
+- I wanted to build working Webapps(SPA) for my implementation experience. With the project, I also tried to show my ability/expertise about (not only web) programming.
 
 Build Status
-The system is working as is but also is a partial implementation.
-"Recent Orders" of a customer part is not developed. (will be added sooner or later)
-Shipping management including shipment tracking interface is not developed.
-Collection management including back office system interface is not developed.
-Code management system (customers, items, employees) is not developed. (data is built through MySQL wWrkbench)
+- The system is working as is but also is a partial implementation.
+- "Recent Orders" of a customer part is not developed. (will be added sooner or later)
+- Shipping management including shipment tracking interface is not developed.
+- Collection management including back office system interface is not developed.
+- Code management system (customers, items, employees) is not developed. (data is built through MySQL wWrkbench)
 
 Code style
-Microservices architecture (without using MVC framework like Spring)
+- Microservices architecture (without using MVC framework like Spring)
+- SPA
 
 Tech/framework used
 - Server side: Java EE with JDBC, JSON, cookie
 - Client side: HTML, CSS, JavaScript(+jQuery) with JSON, cookie
 - Development: Eclipse IDE for Enterprise Java Developers (version: 2020-09 (4.17.0))
-               project build: 
+- Pjt. style : Dynamic Web Project
 - VCS        : Git with GitHub
 
 Running Environment
