@@ -23,6 +23,7 @@ Tech/Framework used
 - VCS: Git with GitHub
 
 Running Environment
+- OS: Windows 10
 - WS/WAS: Apache Tomcat v9.0 Server
 - DBMS: MySQL Server (version: 8.0.21)
 - JDBC: MySQL Connector-Java 8.0.21
