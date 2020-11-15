@@ -9,16 +9,17 @@ $(document).ready(function() {     		// Performs just after creating DOM tree
 	setCookie('authStat', '0');			// to prevent unauthorized use
 	setCookie('whatFunc', '0');			// to prevent external use of 'Login.html'
 	
-	var t1=document.getElementById('Btn0');
+	const t1=document.getElementById('Btn0');
+	const t2=document.getElementById('Btn1');
+	t1.focus();
 	t1.addEventListener('click', function() {
 //		alert('Login button clicked');
 		setCookie('authStat', '0');		// initialize authorization status
 		setCookie('whatFunc', '1'); 	// after login, come back to main menu
-		var pOption = 'width=500, height=250, left=710, top=200, toolbar=no, menubar=no, scrollbars=no, location=no, status=no, resizable=no, fullscreen=no';
+		var pOption = 'width=500, height=180, left=1150, top=150, toolbar=no, menubar=no, scrollbars=no, location=no, status=no, resizable=no, fullscreen=no';
 		window.open('Login.html', 'LoginPopup', pOption);
 	});
 
-	var t2=document.getElementById('Btn1');
 	t2.addEventListener('click', function() {
 //		alert('Order Mgmt. button clicked');
 		var authStat = getCookie('authStat');
@@ -30,7 +31,7 @@ $(document).ready(function() {     		// Performs just after creating DOM tree
 		} else {
 			alert('You must login first');	
 			setCookie('whatFunc', '2');	// after login, go to the function
-			var pOption = 'width=500, height=250, left=710, top=200, toolbar=no, menubar=no, scrollbars=no, location=no, status=no, resizable=no, fullscreen=no';
+			var pOption = 'width=500, height=180, left=1150, top=150, toolbar=no, menubar=no, scrollbars=no, location=no, status=no, resizable=no, fullscreen=no';
 			window.open('Login.html', 'LoginPopup', pOption);
 		}
 		return false;

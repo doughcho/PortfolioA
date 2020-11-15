@@ -13,7 +13,8 @@ $(document).ready(function() {         	// Performs just after creating DOM tree
 		alert('Please use main page to login');
 		window.close();
 		return;
-	}	
+	}
+	document.getElementById('userID').focus();
 	$('#Login').click(function() {     // Resumes when 'Login'(id) button clicked
 //		alert('Login button clicked');                      // for debugging
 		var serializedValue = $('#LoginForm').serialize(); // Collect input data from 'LoginForm'(id) form
@@ -35,9 +36,6 @@ $(document).ready(function() {         	// Performs just after creating DOM tree
 //        		alert('authStat = ' + authStat + ', userName = ' + userName + ', whatFunc = ' + whatFunc);
      			switch (authStat) {
      				case '3':
-//						document.getElementById('userID').value = userName;
-//						document.getElementById('aaaaaa').innerHTML    // <p>, <div>
-//						How to make it happen??	(does input field not work?? no way)					
 						window.close();
 						if (whatFunc == '2') {
 							var pOption = 'width=1580, height=800, left=170, top=100, toolbar=no, menubar=no, scrollbars=no, location=no, status=no, resizable=no, fullscreen=no';

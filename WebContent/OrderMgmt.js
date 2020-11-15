@@ -124,6 +124,7 @@ $(document).ready(function() {         	// Performs just after creating DOM tree
 	const d06 = document.getElementById('icomment');// comment (orderItem)
 	clearAll();
 	var savedPos = t01;
+	t01.focus();
     
 	t01.addEventListener('focusin', function() {
 		orderID = t01.value;
@@ -169,14 +170,24 @@ $(document).ready(function() {         	// Performs just after creating DOM tree
 		callServlet('03');
 	});
 
-	t04.addEventListener('click', function() {	// remained: "Recent Orders" pop-up
-		if (isCust) {
-			setCookie('custID', t03.value);
-			// popup "Recent Orders" window
-			alert(d01.value+'\'s recent orders will be displayed');
-			// if "Recent Orders" window selected an order,
-			// getCookie('orderID') & showAll()
+	t04.addEventListener('click', function() {
+		if (!isCust) {
+			alert('custID '+t03.value+' does not exist');
+			return;
 		}
+		setCookie('custID', t03.value);
+		setCookie('whatFunc', '9');
+		var pOption = 'width=450, height=350, left=680, top=255, toolbar=no, menubar=no, scrollbars=no, location=no, titlebar = no, status=no, resizable=no, fullscreen=no';
+		var new_window = window.open('RecentO.html', 'RctOPopup', pOption);
+		new_window.onbeforeunload = function() {
+			var ordID = getCookie('orderID');
+			if (ordID == '999999') return;
+			if (t01.value == ordID) return;
+			orderID = t01.value = ordID;
+			savedPos = t01;
+			jsonStr = '{"orderID":'+orderID+'}';
+			callServlet('01');
+		}	
 	});
 	
 	t05.addEventListener('focusin', function() {

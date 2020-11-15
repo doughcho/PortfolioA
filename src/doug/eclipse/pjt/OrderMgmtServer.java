@@ -92,6 +92,23 @@ public class OrderMgmtServer extends HttpServlet {
     		this.ord.itemCnt = count;
     	}
     }
+    class OrderDate {
+    	int orderID;
+    	String date;
+    }
+    class CustOrder {		// customer's recent orders
+    	int custID;
+    	int ordCnt;
+    	OrderDate[] cOrds;
+    	public CustOrder(int ID, int count) {
+    		if (count > 0) {
+    			this.cOrds = new OrderDate[count];	// reference to objects
+    			for (int i = 0; i < count; i++) this.cOrds[i] = new OrderDate();
+    		}
+    		this.custID = ID;
+    		this.ordCnt = count;
+    	}
+    }
     class Summary {
     	int    orderID;
     	int    seq;			// for an orderItem added (15)
@@ -114,6 +131,7 @@ public class OrderMgmtServer extends HttpServlet {
     Order	  order    	= null;
     OrderItem orderItem	= null;
     OneOrder  oneOrder  = null;
+    CustOrder custOrder = null;
     Summary	  summary   = null;
     String	  requestData  = null;	// request data (JSON string)
     String	  responseData = null;	// response data (JSON string)
@@ -209,6 +227,38 @@ public class OrderMgmtServer extends HttpServlet {
 	        	rs = stmt.executeQuery(sql);
 	    	    oneOrder.ordItem[i].itemName = (rs.next()) ? rs.getString(1) : null;
 	        }
+	        isGood = true;
+	    } catch (SQLException e) {
+	    	System.out.println(e.getMessage());
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (conn != null) conn.close();
+			} catch (SQLException ex) {
+				System.out.println(ex.getMessage());
+			}
+		}
+	    return isGood;
+	}
+	
+	protected boolean readCustOrders(int custID, int maxCnt) throws SQLException {		
+		boolean isGood = false;	
+		try { 
+	    	Class.forName(jdbcDriver);    // load JDBC Driver
+	    	conn = DriverManager.getConnection(url, sysuser, syspswd);
+	    	stmt = conn.createStatement(ResultSet.CONCUR_READ_ONLY, 0);
+
+	    	String sql = "Select ORDER_ID, ODATE from orders where CUST_ID="+custID+" order by ORDER_ID DESC;";
+	        rs = stmt.executeQuery(sql);
+	        custOrder = new CustOrder(custID, maxCnt);
+	        int cnt = 0;
+	        while (rs.next()) {
+	        	custOrder.cOrds[cnt].orderID = rs.getInt(1);
+	        	custOrder.cOrds[cnt].date    = rs.getString(2);	        	
+	        	if (++cnt > maxCnt) break;
+	        }
+	        custOrder.ordCnt = cnt;
 	        isGood = true;
 	    } catch (SQLException e) {
 	    	System.out.println(e.getMessage());
@@ -373,7 +423,6 @@ public class OrderMgmtServer extends HttpServlet {
 				case "15" :	// 'Add Item' clicked
 				case "16" :	// 'Change Item' clicked
 				case "17" :	// 'Delete Item' clicked
-//			        rs = stmt.executeQuery("Select * from orders where ORDER_ID="+o.orderID+" for update;");
 			        rs = stmt.executeQuery("Select * from orders where ORDER_ID="+o.orderID+";");
 			        if (!rs.next()) return false;
 			        summary.itemCnt  += rs.getInt("ITEM_CNT");			
@@ -443,6 +492,7 @@ public class OrderMgmtServer extends HttpServlet {
 
 	protected boolean insertOrderItem(OrderItem oi) throws SQLException, ParseException {    
 		boolean isGood = false;
+		int custId = 0;
 		try { 
 	    	Class.forName(jdbcDriver);
 	    	conn = DriverManager.getConnection(url, sysuser, syspswd);
@@ -486,7 +536,6 @@ public class OrderMgmtServer extends HttpServlet {
 	    	conn = DriverManager.getConnection(url, sysuser, syspswd);
 	    	stmt = conn.createStatement(ResultSet.CONCUR_UPDATABLE, 0);
 	    	
-//	        String sql = "Select * from orderitems where ORDER_ID="+oi.orderID+" AND SEQ="+oi.seq+" for update;";
 	        String sql = "Select * from orderitems where ORDER_ID="+oi.orderID+" AND SEQ="+oi.seq+";";
 	        rs = stmt.executeQuery(sql);
 	        if (!rs.next()) return false;
@@ -532,6 +581,7 @@ public class OrderMgmtServer extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String wellDone = "N";		// for cookie "wellDone"
 		int orderID = 0;
+		int custID  = 0;
 
 //		System.out.println("doPost() of OrderMgmtServer");		        
 		try {
@@ -564,10 +614,21 @@ public class OrderMgmtServer extends HttpServlet {
 					}
 					break;
 				case "03" :	// 'Customer #' inserted
-					int custID = element.getAsJsonObject().get("custID").getAsInt();
+					custID = element.getAsJsonObject().get("custID").getAsInt();
 					if (readCust(custID)) {
 						gson = new GsonBuilder().setDateFormat("yyyy-MM-dd' 'HH:mm:ss").create();			
 						element = gson.toJsonTree(customer);
+						json = (JsonObject) element;		
+						responseData = json.toString();
+						wellDone = "Y";
+					}
+					break;
+				case "04" :	// 'Recent Orders' clicked
+					custID = element.getAsJsonObject().get("custID").getAsInt();
+					int maxCnt = element.getAsJsonObject().get("maxCnt").getAsInt();
+					if (readCustOrders(custID, maxCnt)) {
+						gson = new GsonBuilder().setDateFormat("yyyy-MM-dd' 'HH:mm:ss").create();			
+						element = gson.toJsonTree(custOrder);
 						json = (JsonObject) element;		
 						responseData = json.toString();
 						wellDone = "Y";
