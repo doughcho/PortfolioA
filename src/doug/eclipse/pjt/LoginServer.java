@@ -12,21 +12,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import java.sql.*;                				// added for JDBC
 
-/**
- * Servlet implementation class LoginServer
- */
 @WebServlet("/LoginServer")    // or define in the WEB-INF>lib>web.xml
-
 public class LoginServer extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	String userName = null;	   // used in the doPost() and authenticationCheck()
        
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
     public LoginServer() {
         super();
-        // TODO Auto-generated constructor stub
     }
     
     public void init(ServletConfig config) throws ServletException {
@@ -66,7 +58,6 @@ public class LoginServer extends HttpServlet {
 	    } catch (SQLException e) {
 	    	System.out.println(e.getMessage());
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			try {
@@ -78,18 +69,11 @@ public class LoginServer extends HttpServlet {
 	    return status;
 	}
 	
-    /**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 //		response.getWriter().append("Served at: ").append(request.getContextPath());
-        // TODO Auto-generated constructor stub
 		doPost(request, response);		
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String msg = "not processed correctly...";
 
@@ -121,7 +105,7 @@ public class LoginServer extends HttpServlet {
 			e.printStackTrace();
 		} finally {
 			System.out.println(msg + ", status = " + status + ", name = " + userName);
-			// add cookies (do not work with space in the middle of cookie value)
+			// add cookies (do not work with space in the middle of the cookie value)
 			response.setContentType("text/plain;charset=UTF-8");    // ISO-8859-1; or text/http??			
 			String path = request.getContextPath();		
 			String strStatus = Integer.toString(status);

@@ -30,12 +30,10 @@ import java.util.Calendar;
 import java.text.ParseException;
 //import java.util.Arrays;						// related to JsonArray
 
-/**
- * Servlet implementation class OrderMgmtServer
- */
 @WebServlet("/OrderMgmtServer")
 public class OrderMgmtServer extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+    static final float TAX_RATE = 0.0785f;
 	class Customer {
 		int custID;			// primary key
 		String name;
@@ -133,39 +131,36 @@ public class OrderMgmtServer extends HttpServlet {
     OneOrder  oneOrder  = null;
     CustOrder custOrder = null;
     Summary	  summary   = null;
-    String	  requestData  = null;	// request data (JSON string)
-    String	  responseData = null;	// response data (JSON string)
-    String    whatEvent    = null;
-    String    userName     = null;
-    DateFormat dateFormat  = new SimpleDateFormat("yyyy-MM-dd");
-    Date date              = Calendar.getInstance().getTime();
-    String today           = dateFormat.format(date);
-    String jdbcDriver = "com.mysql.cj.jdbc.Driver";
-    String url        = "jdbc:mysql://localhost:3306/testdb";
-    String sysuser    = "root";
-    String syspswd    = "DougsMySQL";
-    Connection conn   = null;
-    Statement stmt    = null;
-    ResultSet rs      = null;
-    final static float TAX_RATE = 0.0785f;
+    String requestData  = null;	// request data (JSON string)
+    String responseData = null;	// response data (JSON string)
+    String whatEvent    = null;
+    String userName     = null;
+    static String today;
+    // need to be changed to the outside the code
+    static String jdbcDriver = "com.mysql.cj.jdbc.Driver";
+    static String dbUrl      = "jdbc:mysql://localhost:3306/testdb";
+    static String dbUser     = "testUser";
+    static String dbPswd     = "4dbAccess@app";
+    Connection conn = null;
+    Statement  stmt = null;
+    ResultSet  rs   = null;
     
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
     public OrderMgmtServer() {
         super();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = Calendar.getInstance().getTime();
+        today = dateFormat.format(date);
     }
 
-	/**
-	 * @see Servlet#init(ServletConfig)
-	 */
 	public void init(ServletConfig config) throws ServletException {
     	System.out.println("init() of OrderMgmtServer");
+    	try {
+			Class.forName(jdbcDriver);	// load JDBC Driver
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 
-	/**
-	 * @see Servlet#destroy()
-	 */
 	public void destroy() {
     	System.out.println("destroy() of OrderMgmtServer");
 	}
@@ -174,8 +169,7 @@ public class OrderMgmtServer extends HttpServlet {
 	protected boolean readOrder(int orderID) throws SQLException {		
 		boolean isGood = false;	
 		try { 
-	    	Class.forName(jdbcDriver);    // load JDBC Driver
-	    	conn = DriverManager.getConnection(url, sysuser, syspswd);
+	    	conn = DriverManager.getConnection(dbUrl, dbUser, dbPswd);
 	    	stmt = conn.createStatement(ResultSet.CONCUR_READ_ONLY, 0);
 
 	    	String sql = "Select * from orders where ORDER_ID="+orderID+";";
@@ -230,8 +224,6 @@ public class OrderMgmtServer extends HttpServlet {
 	        isGood = true;
 	    } catch (SQLException e) {
 	    	System.out.println(e.getMessage());
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
 		} finally {
 			try {
 				if (conn != null) conn.close();
@@ -245,8 +237,7 @@ public class OrderMgmtServer extends HttpServlet {
 	protected boolean readCustOrders(int custID, int maxCnt) throws SQLException {		
 		boolean isGood = false;	
 		try { 
-	    	Class.forName(jdbcDriver);    // load JDBC Driver
-	    	conn = DriverManager.getConnection(url, sysuser, syspswd);
+	    	conn = DriverManager.getConnection(dbUrl, dbUser, dbPswd);
 	    	stmt = conn.createStatement(ResultSet.CONCUR_READ_ONLY, 0);
 
 	    	String sql = "Select ORDER_ID, ODATE from orders where CUST_ID="+custID+" order by ORDER_ID DESC;";
@@ -262,8 +253,6 @@ public class OrderMgmtServer extends HttpServlet {
 	        isGood = true;
 	    } catch (SQLException e) {
 	    	System.out.println(e.getMessage());
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
 		} finally {
 			try {
 				if (conn != null) conn.close();
@@ -277,8 +266,7 @@ public class OrderMgmtServer extends HttpServlet {
 	protected boolean readCust(int custID) throws SQLException {    
 		boolean isGood = false;
 		try { 
-	    	Class.forName(jdbcDriver);
-	    	conn = DriverManager.getConnection(url, sysuser, syspswd);
+	    	conn = DriverManager.getConnection(dbUrl, dbUser, dbPswd);
 	    	stmt = conn.createStatement(ResultSet.CONCUR_READ_ONLY, 0);
 
 	    	String sql = "Select * from customers where CUST_ID="+custID+";";
@@ -299,8 +287,6 @@ public class OrderMgmtServer extends HttpServlet {
 	        isGood = true;
 	    } catch (SQLException e) {
 	    	System.out.println(e.getMessage());
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
 		} finally {
 			try {
 				if (conn != null) conn.close();
@@ -314,8 +300,7 @@ public class OrderMgmtServer extends HttpServlet {
 	protected boolean readEmpl(int emplID) throws SQLException {    
 		boolean isGood = false;
 		try { 
-	    	Class.forName(jdbcDriver);
-	    	conn = DriverManager.getConnection(url, sysuser, syspswd);
+	    	conn = DriverManager.getConnection(dbUrl, dbUser, dbPswd);
 	    	stmt = conn.createStatement(ResultSet.CONCUR_READ_ONLY, 0);
 
 	    	String sql = "Select NAME from employees where EMPL_ID="+emplID+";";
@@ -326,8 +311,6 @@ public class OrderMgmtServer extends HttpServlet {
 	        }
 	    } catch (SQLException e) {
 	    	System.out.println(e.getMessage());
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
 		} finally {
 			try {
 				if (conn != null) conn.close();
@@ -341,8 +324,7 @@ public class OrderMgmtServer extends HttpServlet {
 	protected boolean readItem(int itemID) throws SQLException {	    
 		boolean isGood = false;
 		try { 
-	    	Class.forName(jdbcDriver);
-	    	conn = DriverManager.getConnection(url, sysuser, syspswd);
+	    	conn = DriverManager.getConnection(dbUrl, dbUser, dbPswd);
 	    	stmt = conn.createStatement(ResultSet.CONCUR_READ_ONLY, 0);
 
 	    	String sql = "Select NAME from items where ITEM_ID="+itemID+";";
@@ -353,8 +335,6 @@ public class OrderMgmtServer extends HttpServlet {
 	        }
 	    } catch (SQLException e) {
 	    	System.out.println(e.getMessage());
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
 		} finally {
 			try {
 				if (conn != null) conn.close();
@@ -368,8 +348,7 @@ public class OrderMgmtServer extends HttpServlet {
 	protected boolean insertOrder(Order o) throws SQLException, ParseException {    
 		boolean isGood = false;
 		try { 
-	    	Class.forName(jdbcDriver);
-	    	conn = DriverManager.getConnection(url, sysuser, syspswd);
+	    	conn = DriverManager.getConnection(dbUrl, dbUser, dbPswd);
 	    	stmt = conn.createStatement(ResultSet.CONCUR_UPDATABLE, 0);
 	    	
 	        o.crName = userName;
@@ -387,8 +366,6 @@ public class OrderMgmtServer extends HttpServlet {
 	        }
 	    } catch (SQLException e) {
 	    	System.out.println(e.getMessage());
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
 		} finally {
 			try {
 				if (conn != null) conn.close();
@@ -402,8 +379,7 @@ public class OrderMgmtServer extends HttpServlet {
 	protected boolean updateOrder(Order o) throws SQLException, ParseException {    
 		boolean isGood = false;
 		try { 
-	    	Class.forName(jdbcDriver);
-	    	conn = DriverManager.getConnection(url, sysuser, syspswd);
+	    	conn = DriverManager.getConnection(dbUrl, dbUser, dbPswd);
 	    	stmt = conn.createStatement(ResultSet.CONCUR_UPDATABLE, 0);
 	    	
 	        String sql= "Update orders set ";
@@ -443,8 +419,6 @@ public class OrderMgmtServer extends HttpServlet {
 	        if (stmt.executeUpdate(sql) == 1) isGood = true;
 	    } catch (SQLException e) {
 	    	System.out.println(e.getMessage());
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
 		} finally {
 			try {
 				if (conn != null) conn.close();
@@ -458,8 +432,7 @@ public class OrderMgmtServer extends HttpServlet {
 	protected boolean readOrderItem(int orderID, int seq) throws SQLException {		
 		boolean isGood = false;
 		try { 
-	    	Class.forName(jdbcDriver);
-	    	conn = DriverManager.getConnection(url, sysuser, syspswd);
+	    	conn = DriverManager.getConnection(dbUrl, dbUser, dbPswd);
 	    	stmt = conn.createStatement(ResultSet.CONCUR_READ_ONLY, 0);
 	    	
 	        String sql = "Select * from orderitems where ORDER_ID="+orderID+" AND SEQ="+seq+";";
@@ -478,8 +451,6 @@ public class OrderMgmtServer extends HttpServlet {
         	isGood = true;
 	    } catch (SQLException e) {
 	    	System.out.println(e.getMessage());
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
 		} finally {
 			try {
 				if (conn != null) conn.close();
@@ -492,10 +463,8 @@ public class OrderMgmtServer extends HttpServlet {
 
 	protected boolean insertOrderItem(OrderItem oi) throws SQLException, ParseException {    
 		boolean isGood = false;
-		int custId = 0;
 		try { 
-	    	Class.forName(jdbcDriver);
-	    	conn = DriverManager.getConnection(url, sysuser, syspswd);
+	    	conn = DriverManager.getConnection(dbUrl, dbUser, dbPswd);
 	    	stmt = conn.createStatement(ResultSet.CONCUR_UPDATABLE, 0);
 	    	
 	        String sql = "Select SEQ from orderitems where ORDER_ID = "+oi.orderID+";";
@@ -517,8 +486,6 @@ public class OrderMgmtServer extends HttpServlet {
 	        }
 	    } catch (SQLException e) {
 	    	System.out.println(e.getMessage());
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
 		} finally {
 			try {
 				if (conn != null) conn.close();
@@ -532,8 +499,7 @@ public class OrderMgmtServer extends HttpServlet {
 	protected boolean updateOrderItem(OrderItem oi) throws SQLException, ParseException {    
 		boolean isGood = false;
 		try { 
-	    	Class.forName(jdbcDriver);
-	    	conn = DriverManager.getConnection(url, sysuser, syspswd);
+	    	conn = DriverManager.getConnection(dbUrl, dbUser, dbPswd);
 	    	stmt = conn.createStatement(ResultSet.CONCUR_UPDATABLE, 0);
 	    	
 	        String sql = "Select * from orderitems where ORDER_ID="+oi.orderID+" AND SEQ="+oi.seq+";";
@@ -554,8 +520,6 @@ public class OrderMgmtServer extends HttpServlet {
 	        if (stmt.executeUpdate(sql) == 1) isGood = true;
 		} catch (SQLException e) {
 	    	System.out.println(e.getMessage());
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
 		} finally {
 			try {
 				if (conn != null) conn.close();
@@ -566,18 +530,12 @@ public class OrderMgmtServer extends HttpServlet {
 	    return isGood;
 	}
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 //		response.getWriter().append("Served at: ").append(request.getContextPath());
 //		System.out.println("doGet() of OrderMgmtServer");		        
 		doPost(request, response);
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String wellDone = "N";		// for cookie "wellDone"
 		int orderID = 0;
